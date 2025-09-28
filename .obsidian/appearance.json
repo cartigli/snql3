@@ -1,0 +1,13 @@
+{
+  "theme": "obsidian",
+  "accentColor": "#8f1937",
+  "interfaceFontFamily": "Times New Roman",
+  "monospaceFontFamily": "",
+  "showViewHeader": false,
+  "showRibbon": false,
+  "enabledCssSnippets": [
+    "bullet-styles"
+  ],
+  "textFontFamily": "Times New Roman",
+  "translucency": false
+}

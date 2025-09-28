@@ -1,0 +1,10 @@
+/* Replaces all bullet points with dashes */
+.markdown-preview-view ul > li,
+.cm-list-1 > li {
+  list-style: none; /* Hide the original bullet circle */
+}
+
+.markdown-preview-view ul > li::before,
+.cm-list-1 > li > .cm-formatting-list::before {
+  content: '- ';    /* Add a dash and a space before the text */
+}
