@@ -1,7 +1,9 @@
 import os
+import time
 import pandas as pd
 import mysql.connector
 from config import *
+from datetime import datetime 
 
 
 def collector(LOCAL_DIR):
@@ -68,19 +70,28 @@ def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
 		return None
 
 
-def table_support(conn, TABLE_NAME):
-	cursor = conn.cursor()	
-	cursor.execute(f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4, PRIMARY KEY (note_no));")
-	query_0 = f"CREATE TABLE IF NOT EXISTS meta (client VARCHAR(75) NOT NULL);" # add timestamp soon
-	cursor.execute(query_0)
-
-
-def upload(conn, TABLE_NAME, CLIENT, contained):
+def table_support(conn):
 	cursor = conn.cursor()
-	query_1 = f"INSERT INTO {TABLE_NAME} (note_tl, note_lo, note) VALUES (%s, %s, %s);"
-	query_2 = f"INSERT INTO meta VALUES ('{CLIENT}');"
-	cursor.executemany(query_1, contained)
-	cursor.execute(query_2)
+
+	nominclature = time.time()
+	c_date = datetime.fromtimestamp(nominclature)	
+	time_0 = c_date.strftime('%Y%m%d%H%M%S')
+
+	title = f"de"
+	t_name = (f"{title}{time_0}")
+
+	q = f"CREATE TABLE IF NOT EXISTS {t_name} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4, PRIMARY KEY (note_no));"
+	# query_0 = f"CREATE TABLE IF NOT EXISTS meta (client VARCHAR(75) NOT NULL);" # add timestamp soon
+	cursor.execute(q)
+
+	return t_name
+
+
+def upload(conn, t_name, CLIENT, contained):
+	cursor = conn.cursor()
+	
+	q = f"INSERT INTO {t_name} (note_tl, note_lo, note) VALUES (%s, %s, %s);"
+	cursor.executemany(q, contained)
 	conn.commit()
 
 
@@ -90,11 +101,11 @@ if __name__=="__main__":
 	
 	conn = initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR)
 
-	table_s = table_support(conn, TABLE_NAME)	
+	t_name = table_support(conn)
 
 	data = [(row.note_tl, row.note_lo, row.note) for row in contained]
 
-	upload(conn, TABLE_NAME, CLIENT, data)
+	upload(conn, t_name, CLIENT, data)
 	conn.close()
 
 
