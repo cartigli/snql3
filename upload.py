@@ -89,7 +89,7 @@ def table_support(conn):
 	return t_name
 
 
-def upload(conn, t_name, CLIENT, contained):
+def upload(conn, t_name, contained):
 	cursor = conn.cursor()
 	
 	q = f"INSERT INTO {t_name} (note_tl, note_lo, note) VALUES (%s, %s, %s);"
@@ -107,7 +107,7 @@ if __name__=="__main__":
 
 	data = [(row.note_tl, row.note_lo, row.note) for row in contained]
 
-	upload(conn, t_name, CLIENT, data)
+	upload(conn, t_name, data)
 	conn.close()
 
 
