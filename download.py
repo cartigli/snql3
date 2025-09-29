@@ -1,4 +1,5 @@
 import os
+import os
 import pandas as pd
 import mysql.connector
 from config import *
@@ -10,26 +11,25 @@ def survey_db(conn, TABLE_NAME):
 	cursor.execute(query_0)
 	notes_remote = cursor.fetchall()
 
-	query_1 = f"SELECT vault_origin FROM meta;"
-	cursor.execute(query_1)
-	og_path = cursor.fetchone()
+	#query_1 = f"SELECT client FROM meta;"
+	#cursor.execute(query_1)
+	#client = cursor.fetchone()
 
-	return notes_remote, og_path
+	return notes_remote
 
  
-def layout_guts(notes_remote, og_path):
+def layout_guts(notes_remote):
 	note_name = []
 	note_lo = []
 	note_guts = []
 	patched_path = []
 
-	old_base = og_path[0]
-
 	for record in notes_remote:
 		note_name.append(record[1])
 
-		old_path = record[2]
-		new_path = old_path.replace(old_base, LOCAL_DIR)
+		rel_path = record[2]
+		new_path = os.path.join(LOCAL_DIR, rel_path)
+		#new_path = old_path.replace(old_base, LOCAL_DIR)
 		repaired_path = os.path.normpath(new_path) # win
 		note_lo.append(repaired_path)
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 	if conn:
 		try:
 			notes_remote = survey_db(conn, TABLE_NAME)
-			guts = layout_guts(*notes_remote)
+			guts = layout_guts(notes_remote)
 			glory = contain(*guts)
 			write_to_disk(glory)
 		finally:

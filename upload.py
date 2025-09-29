@@ -16,6 +16,8 @@ def collector(LOCAL_DIR):
 		for filename in files:
 			try:
 				fll_fpath = os.path.join(root, filename)
+				rel_fpath = os.path.relpath(fll_fpath, LOCAL_DIR)
+
 				ftype_ign = ('.DS_Store', '.obsidian', '.git')
 				if any(term in fll_fpath for term in ftype_ign):
 					print(f"{filename}\'s spoofed.")
@@ -23,7 +25,8 @@ def collector(LOCAL_DIR):
 					with open (fll_fpath, 'r', encoding='utf-8') as f:
 						guts = f.read()
 						guts_togo.append(guts)
-					lo_togo.append(fll_fpath)
+						
+					lo_togo.append(rel_fpath)
 					name_togo.append(filename)
 
 			except UnicodeDecodeError:
@@ -70,14 +73,14 @@ def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
 def table_support(conn, TABLE_NAME):
 	cursor = conn.cursor()	
 	cursor.execute(f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4, PRIMARY KEY (note_no));")
-	query_0 = f"CREATE TABLE IF NOT EXISTS meta (vault_origin VARCHAR(255) NOT NULL, client VARCHAR(27) NOT NULL);"
+	query_0 = f"CREATE TABLE IF NOT EXISTS meta (client VARCHAR(75) NOT NULL);" # add timestamp soon
 	cursor.execute(query_0)
 
 
 def upload(conn, TABLE_NAME, CLIENT, contained):
 	cursor = conn.cursor()
 	query_1 = f"INSERT INTO {TABLE_NAME} (note_tl, note_lo, note) VALUES (%s, %s, %s);"
-	query_2 = f"INSERT INTO meta VALUES ('{LOCAL_DIR}', '{CLIENT}');"
+	query_2 = f"INSERT INTO meta VALUES ('{CLIENT}');"
 	cursor.executemany(query_1, contained)
 	cursor.execute(query_2)
 	conn.commit()
