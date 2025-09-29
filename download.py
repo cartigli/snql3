@@ -8,7 +8,7 @@ def survey_db(conn, TABLE_NAME):
 	cursor = conn.cursor()
 	query_0 = f"SELECT * FROM {TABLE_NAME};"
 	cursor.execute(query_0)
-	notes_remote = cursor.fetchall() # one tuple per note
+	notes_remote = cursor.fetchall()
 
 	query_1 = f"SELECT vault_origin FROM meta;"
 	cursor.execute(query_1)
@@ -27,9 +27,12 @@ def layout_guts(notes_remote, og_path):
 
 	for record in notes_remote:
 		note_name.append(record[1])
+
 		old_path = record[2]
 		new_path = old_path.replace(old_base, LOCAL_DIR)
-		note_lo.append(new_path)
+		repaired_path = os.path.normpath(new_path) # win
+		note_lo.append(repaired_path)
+
 		note_guts.append(record[3])
 
 	return note_name, note_lo, note_guts

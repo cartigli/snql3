@@ -1,4 +1,6 @@
 import os
+import os
+import os
 import pandas as pd
 import mysql.connector
 from config import *
@@ -9,7 +11,6 @@ def collector(LOCAL_DIR):
 	guts_togo = []
 	name_togo = []
 	lo_togo = []
-	#spoofed = []
 	add_err = []
 	for root, dirs, files in os.walk(folder_path):
 		for filename in files:
@@ -17,7 +18,6 @@ def collector(LOCAL_DIR):
 				fll_fpath = os.path.join(root, filename)
 				ftype_ign = ('.DS_Store', '.obsidian', '.git')
 				if any(term in fll_fpath for term in ftype_ign):
-					#spoofed.append(filename)
 					print(f"{filename}\'s spoofed.")
 				else:
 					with open (fll_fpath, 'r', encoding='utf-8') as f:
