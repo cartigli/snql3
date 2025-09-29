@@ -1,5 +1,6 @@
 [
   "duplicate-line",
   "execute-code",
-  "obsidian-tikzjax"
+  "obsidian-tikzjax",
+  "vscode-editor"
 ]

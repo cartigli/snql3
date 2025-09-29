@@ -7,4 +7,5 @@ TABLE_NAME = os.getenv('TABLE_NAME','notes_2')
 DATABASE_ADDR = os.getenv('DATABASE_ADDR','192.168.1.68')
 HOST_PORT = os.getenv('HOST_PORT','3306')
 
-LOCAL_DIR = os.getenv('LOCAL_DIR','/Volumes/HomeXx/compuir/Desktop/vault_test')
+LOCAL_DIR = os.getenv('LOCAL_DIR','/Volumes/HomeXx/compuir/vault') # macos - host
+# LOCAL_DIR = os.getenv('LOCAL_DIR','/home/tom/fr/vault') # linux - remote
