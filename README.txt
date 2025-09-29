@@ -1,4 +1,5 @@
 This code was inspired by Github's architecture and designed for private, self-hosting of .md files. 
+This code was inspired by Github's architecture and designed for private, self-hosting of .md files. 
 
 I use an obsidian vault for *everything* and needed a place to backup the collection of information I had created over the years. Github was an obvious candidate for its simplicity and reliability, but with the glaring downside of leaving my notes on a third party's servers. Although I could encrypt repositories with git-crypt or ignore sensitive files, this still either leaves the information (albeit encrypted) on remote hardware or doesn't backup the sensitive information. Even with a private repository, leaks do happen and Github is not perfect.
 

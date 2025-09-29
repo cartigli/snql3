@@ -1,9 +1,10 @@
 import os
 import time
+import datetime
 import pandas as pd
 import mysql.connector
 from config import *
-from datetime import datetime 
+#from datetime import datetime 
 
 
 def collector(LOCAL_DIR):
@@ -73,9 +74,10 @@ def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
 def table_support(conn):
 	cursor = conn.cursor()
 
-	nominclature = time.time()
-	c_date = datetime.fromtimestamp(nominclature)	
-	time_0 = c_date.strftime('%Y%m%d%H%M%S')
+	#nominclature = time.time()
+	#c_date = datetime.fromtimestamp(nominclature)	
+	ut_c = datetime.datetime.now(datetime.UTC)
+	time_0 = ut_c.strftime('%Y%m%d%H%M%S%z').replace('+', 'plus').replace('-', 'less')
 
 	title = f"de"
 	t_name = (f"{title}{time_0}")
