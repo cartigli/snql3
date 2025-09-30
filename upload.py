@@ -7,11 +7,11 @@ from config import *
 
 
 def collector(LOCAL_DIR):
-	folder_path = LOCAL_DIR
 	guts_togo = []
 	name_togo = []
 	lo_togo = []
-	for root, dirs, files in os.walk(folder_path):
+
+	for root, dirs, files in os.walk(LOCAL_DIR):
 		for filename in files:
 			try:
 				fll_fpath = os.path.join(root, filename)
@@ -66,7 +66,7 @@ def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
 		return conn
 		
 	except Exception as e:
-		print(f"ERR {e}: CHECK CONFIG")
+		print(f"ERR: {e}; CHECK CONFIG!")
 
 		return None
 
@@ -75,10 +75,11 @@ def table_support(conn):
 	cursor = conn.cursor()
 
 	ut_c = datetime.datetime.now(datetime.UTC)
-	time_0 = ut_c.strftime('%Y%m%d%H%M%S%z').replace('+', 'plus').replace('-', 'less')
+	time_0 = ut_c.strftime('%Y%m%d%H%M%S%z')
+	time = time_0.replace('+', 'plus').replace('-', 'less')
 
 	title = f"de"
-	t_name = (f"{title}_{time_0}")
+	t_name = (f"{title}_{time}")
 
 	q = f"CREATE TABLE IF NOT EXISTS {t_name} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4, PRIMARY KEY (note_no));"
 	cursor.execute(q)
@@ -91,6 +92,7 @@ def upload(conn, t_name, contained):
 	
 	q = f"INSERT INTO {t_name} (note_tl, note_lo, note) VALUES (%s, %s, %s);"
 	cursor.executemany(q, contained)
+	
 	conn.commit()
 
 
@@ -99,12 +101,11 @@ if __name__=="__main__":
 	contained = container(*collected)
 	
 	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
-
 	t_name = table_support(conn)
 
 	data = [(row.note_tl, row.note_lo, row.note) for row in contained]
-
 	upload(conn, t_name, data)
+	
 	conn.close()
 
 

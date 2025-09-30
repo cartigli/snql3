@@ -19,7 +19,7 @@ def survey_db(conn, DB_NAME):
 def survey_t(conn, table):
 	cursor = conn.cursor()
 
-	q = f"SELECT * FROM {table}"
+	q = f"SELECT * FROM {table};"
 	cursor.execute(q)
 	guts = cursor.fetchall()
 
@@ -84,16 +84,20 @@ def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
 
 if __name__ == "__main__":
 	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
+
 	if conn:
+
 		try:
 			table = survey_db(conn, DB_NAME)
 			todos_detable = survey_t(conn, table)
 			guts = layout_guts(todos_detable)
 			glory = contain(*guts)
 			write_to_disk(glory)
+
 		finally:
 			conn.close()
 			print(f"Got the files to the local_machine, boss!")
+
 	else:
 		print(f"Something went wrong, boss. Check the connection & config, please.")
 
