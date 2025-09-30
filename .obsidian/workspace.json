@@ -11,10 +11,12 @@
             "id": "91483242b4361efb",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "vscode-editor",
+              "state": {
+                "file": "config.py"
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "config"
             }
           }
         ]
@@ -116,13 +118,14 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "vscode-editor:Create Code File": false,
       "command-palette:Open command palette": false,
-      "graph:Open graph view": false
+      "graph:Open graph view": false,
+      "vscode-editor:Create Code File": false
     }
   },
   "active": "91483242b4361efb",
   "lastOpenFiles": [
+    "config.ex.txt",
     "download.py",
     "upload.py",
     "config.py",
@@ -157,7 +160,6 @@
     "xsorted()/II Python/IV ML/II chat/II GPT Preprocessing.chopped",
     "xsorted()/II Python/III Stats in Python/II Multi-Var Regression/Five Assumptions",
     "xsorted()/II Python/XX/script.txt",
-    "xsorted()/II Python/IV ML/VIIII Case II",
-    "xsorted()/II Python/IV ML/VIII Business Case"
+    "xsorted()/II Python/IV ML/VIIII Case II"
   ]
 }

@@ -1,0 +1,11 @@
+#modify these values for your MySQL instance and change the filename to config.py
+
+import os
+
+USER = os.getenv('USER','username_here')
+PSWD = os.getenv('PSWD','user_password_here')
+NAME = os.getenv('NAME','database_name_here')
+ADDR = os.getenv('ADDR','192.168.1.xxx')
+
+LOCAL_DIR = os.getenv('LOCAL_DIR','/Volumes/user/desktop/vault') # full path to folder
+
