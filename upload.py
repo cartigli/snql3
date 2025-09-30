@@ -1,10 +1,10 @@
 import os
+import os
 import time
 import datetime
 import pandas as pd
 import mysql.connector
 from config import *
-#from datetime import datetime 
 
 
 def collector(LOCAL_DIR):
@@ -55,13 +55,13 @@ def container(guts_togo, name_togo, lo_togo):
 	return ensemble
 
 
-def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
+def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
 	try:
 		conn = mysql.connector.connect(
-			host=DATABASE_ADDR,
+			host=DB_ADDR,
 			user=DB_USER,
-			password=PASS_PHRASE,
-			database=DATABASE_NAME
+			password=DB_PASS,
+			database=DB_NAME
 		)
 
 		return conn
@@ -101,7 +101,7 @@ if __name__=="__main__":
 	collected = collector(LOCAL_DIR)
 	contained = container(*collected)
 	
-	conn = initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR)
+	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
 
 	t_name = table_support(conn)
 

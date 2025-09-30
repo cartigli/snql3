@@ -1,13 +1,14 @@
 import os
+import os
 import pandas as pd
 import mysql.connector
 from config import *
 
 
-def survey_db(conn):
+def survey_db(conn, DB_NAME):
 	cursor = conn.cursor()
 
-	q = f"SELECT table_name FROM information_schema.tables WHERE table_schema = 'notes' ORDER BY table_name DESC;"
+	q = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{DB_NAME}' ORDER BY table_name DESC;"
 	cursor.execute(q)
 
 	tables = cursor.fetchall()
@@ -24,17 +25,6 @@ def survey_t(table):
 	guts = cursor.fetchall()
 
 	return guts
-
-
-#def survey_db(conn, TABLE_NAME):
-#	cursor = conn.cursor()
-#	query_0 = f"SELECT * FROM {TABLE_NAME};"
-#	cursor.execute(query_0)
-#	notes_remote = cursor.fetchall()
-	#query_1 = f"SELECT client FROM meta;"
-	#cursor.execute(query_1)
-	#client = cursor.fetchone()
-#	return notes_remote
 
  
 def layout_guts(guts):
@@ -76,14 +66,13 @@ def write_to_disk(notes):
 			f.write(contents)
 
 
-# copied from upload - identical
-def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
+def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
 	try:
 		conn = mysql.connector.connect(
-			host=DATABASE_ADDR,
+			host=DB_ADDR,
 			user=DB_USER,
-			password=PASS_PHRASE,
-			database=DATABASE_NAME
+			password=DB_PASS,
+			database=DB_NAME
 		)
 
 		return conn
@@ -94,10 +83,10 @@ def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
 
 
 if __name__ == "__main__":
-	conn = initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR)
+	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
 	if conn:
 		try:
-			tables = survey_db(conn)
+			tables = survey_db(conn, DB_NAME)
 			table = survey_t(tables)
 			guts = layout_guts(table)
 			glory = contain(*guts)
