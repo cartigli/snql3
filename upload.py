@@ -1,5 +1,4 @@
 import os
-import os
 import time
 import datetime
 import pandas as pd
@@ -12,7 +11,6 @@ def collector(LOCAL_DIR):
 	guts_togo = []
 	name_togo = []
 	lo_togo = []
-	add_err = []
 	for root, dirs, files in os.walk(folder_path):
 		for filename in files:
 			try:
@@ -22,6 +20,7 @@ def collector(LOCAL_DIR):
 				ftype_ign = ('.DS_Store', '.obsidian', '.git')
 				if any(term in fll_fpath for term in ftype_ign):
 					print(f"{filename}\'s spoofed.")
+
 				else:
 					with open (fll_fpath, 'r', encoding='utf-8') as f:
 						guts = f.read()
@@ -32,14 +31,13 @@ def collector(LOCAL_DIR):
 
 			except UnicodeDecodeError:
 				print(f"ENCODING ERR: {filename}.")
-				add_err.append(filename)
 				continue
 			except PermissionError:
 				print(f"PERMISSION ERR: {filename}.")
-				add_err.append(filename)
+				continue
 			except Exception as e:
 				print(f"ERR {e}: {filename}.")
-				add_err.append(filename)
+				continue
 
 	return guts_togo, name_togo, lo_togo
 
@@ -50,6 +48,7 @@ def container(guts_togo, name_togo, lo_togo):
 		'note_lo': lo_togo,
 		'note': guts_togo
 		})
+		
 	ensemble = guts_glory.to_records()
 
 	return ensemble
@@ -65,6 +64,7 @@ def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
 		)
 
 		return conn
+		
 	except Exception as e:
 		print(f"ERR {e}: CHECK CONFIG")
 
@@ -74,16 +74,13 @@ def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
 def table_support(conn):
 	cursor = conn.cursor()
 
-	#nominclature = time.time()
-	#c_date = datetime.fromtimestamp(nominclature)	
 	ut_c = datetime.datetime.now(datetime.UTC)
 	time_0 = ut_c.strftime('%Y%m%d%H%M%S%z').replace('+', 'plus').replace('-', 'less')
 
 	title = f"de"
-	t_name = (f"{title}{time_0}")
+	t_name = (f"{title}_{time_0}")
 
 	q = f"CREATE TABLE IF NOT EXISTS {t_name} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4, PRIMARY KEY (note_no));"
-	# query_0 = f"CREATE TABLE IF NOT EXISTS meta (client VARCHAR(75) NOT NULL);" # add timestamp soon
 	cursor.execute(q)
 
 	return t_name

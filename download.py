@@ -1,5 +1,4 @@
 import os
-import os
 import pandas as pd
 import mysql.connector
 from config import *
@@ -31,7 +30,6 @@ def layout_guts(guts):
 	note_name = []
 	note_lo = []
 	note_guts = []
-	patched_path = []
 
 	for record in guts:
 		note_name.append(record[1])
@@ -60,8 +58,10 @@ def write_to_disk(notes):
 	for index, row in notes.iterrows():
 		path = row['path']
 		contents = row['contents']
+
 		directory = os.path.dirname(path)
 		os.makedirs(directory, exist_ok=True)
+
 		with open(path, 'w', encoding='utf-8') as f:
 			f.write(contents)
 
@@ -86,9 +86,9 @@ if __name__ == "__main__":
 	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
 	if conn:
 		try:
-			tables = survey_db(conn, DB_NAME)
-			table = survey_t(conn, tables)
-			guts = layout_guts(table)
+			table = survey_db(conn, DB_NAME)
+			todos_detable = survey_t(conn, table)
+			guts = layout_guts(todos_detable)
 			glory = contain(*guts)
 			write_to_disk(glory)
 		finally:
