@@ -30,13 +30,13 @@ def collector(LOCAL_DIR):
 					name_togo.append(filename)
 
 			except UnicodeDecodeError:
-				print(f"ENCODING ERR: {filename}.")
+				print(f"ENCODING ERR ON {filename}.")
 				continue
 			except PermissionError:
-				print(f"PERMISSION ERR: {filename}.")
+				print(f"PERMISSION ERR ON {filename}.")
 				continue
 			except Exception as e:
-				print(f"ERR {e}: {filename}.")
+				print(f"ERR: {e} ON {filename}.")
 				continue
 
 	return guts_togo, name_togo, lo_togo
@@ -54,13 +54,13 @@ def container(guts_togo, name_togo, lo_togo):
 	return ensemble
 
 
-def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
+def initialize_connection(USER, PSWD, NAME, ADDR):
 	try:
 		conn = mysql.connector.connect(
-			host=DB_ADDR,
-			user=DB_USER,
-			password=DB_PASS,
-			database=DB_NAME
+			host=ADDR,
+			user=USER,
+			password=PSWD,
+			database=NAME
 		)
 
 		return conn
@@ -100,12 +100,10 @@ if __name__=="__main__":
 	collected = collector(LOCAL_DIR)
 	contained = container(*collected)
 	
-	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
+	conn = initialize_connection(USER, PSWD, NAME, ADDR)
 	t_name = table_support(conn)
 
 	data = [(row.note_tl, row.note_lo, row.note) for row in contained]
 	upload(conn, t_name, data)
 	
 	conn.close()
-
-

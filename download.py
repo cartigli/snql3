@@ -4,10 +4,10 @@ import mysql.connector
 from config import *
 
 
-def survey_db(conn, DB_NAME):
+def survey_db(conn, NAME):
 	cursor = conn.cursor()
 
-	q = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{DB_NAME}' ORDER BY table_name DESC;"
+	q = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{NAME}' ORDER BY table_name DESC;"
 	cursor.execute(q)
 
 	tables = cursor.fetchall()
@@ -66,29 +66,30 @@ def write_to_disk(notes):
 			f.write(contents)
 
 
-def initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR):
+def initialize_connection(USER, PSWD, NAME, ADDR):
 	try:
 		conn = mysql.connector.connect(
-			host=DB_ADDR,
-			user=DB_USER,
-			password=DB_PASS,
-			database=DB_NAME
+			host=ADDR,
+			user=USER,
+			password=PSWD,
+			database=NAME
 		)
 
 		return conn
+		
 	except Exception as e:
-		print(f"ERR {e}: CHECK CONFIG")
+		print(f"ERR: {e}; CHECK CONFIG!")
 
 		return None
 
 
 if __name__ == "__main__":
-	conn = initialize_connection(DB_USER, DB_PASS, DB_NAME, DB_ADDR)
+	conn = initialize_connection(USER, PSWD, NAME, ADDR)
 
 	if conn:
 
 		try:
-			table = survey_db(conn, DB_NAME)
+			table = survey_db(conn, NAME)
 			todos_detable = survey_t(conn, table)
 			guts = layout_guts(todos_detable)
 			glory = contain(*guts)
@@ -100,7 +101,3 @@ if __name__ == "__main__":
 
 	else:
 		print(f"Something went wrong, boss. Check the connection & config, please.")
-
-
-
-
