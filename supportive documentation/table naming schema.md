@@ -1,0 +1,32 @@
+So this revision is the introduction of timestamps as table names. This allows the upload script to make a new table for every upload that is titled as its UTC timestamp, which in turn with an ORDER BY table_name clause, allows us to sort the search for tables by their title's value, and therefore, make a default function to pull the most recent upload to the db, or the largest UTC value as a title in the given db.
+
+Here is an example of querying the db { as root user } for table names with Order By clauses. "de" is placed before the UTC for MySQL syntax compliance.
+```MySQL
+mysql> SELECT table_name FROM information_schema.tables WHERE table_schema = 'notes' ORDER BY table_name ASC;
++------------------+
+| TABLE_NAME       |
++------------------+
+| de20250929085049 |
+| de20250929090006 |
+| de20250929090139 |
++------------------+
+3 rows in set (0.002 sec)
+
+mysql> SELECT table_name FROM information_schema.tables WHERE table_schema = 'notes' ORDER BY table_name DESC;
++------------------+
+| TABLE_NAME       |
++------------------+
+| de20250929090139 |
+| de20250929090006 |
+| de20250929085049 |
++------------------+
+3 rows in set (0.002 sec)
+```
+*When the results of this query are ordered in Desc order, the most recent upload to the db is the first item or element returned. By default, the returned list from cursor.fetchall() is a list of tuples for every element. To specify the most recent upload in the db as a string instead of a tuple, one could:
+```python
+# . . . conn established & cursor connected, etc., . . .
+tables = cursor.fetchall()
+most_recent = tables[0][0]
+# . . . use most_recent as t_name to download . . .
+# . . . rest of script . . .
+```

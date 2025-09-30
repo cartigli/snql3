@@ -17,7 +17,7 @@ def survey_db(conn, DB_NAME):
 	return table
 
 
-def survey_t(table):
+def survey_t(conn, table):
 	cursor = conn.cursor()
 
 	q = f"SELECT * FROM {table}"
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 	if conn:
 		try:
 			tables = survey_db(conn, DB_NAME)
-			table = survey_t(tables)
+			table = survey_t(conn, tables)
 			guts = layout_guts(table)
 			glory = contain(*guts)
 			write_to_disk(glory)

@@ -1,7 +1,6 @@
 .DS_Store
 /.DS_Store
 *.DS_Store
-*.md
 __pycache__
 __pycache__/*
 .git

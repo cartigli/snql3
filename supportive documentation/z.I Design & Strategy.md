@@ -1,0 +1,25 @@
+Note taking application with MySQL data management
+
+I want the main function to be storing and backing up text. This was something I looked for often as an junior developer but feel this could be a useful and powerful solution. 
+
+I have an obsidian vault in which I take notes on everything. It contains all my most crucial information and is kept up to date to the best of my ability. As a student and traveler, I find myself needing to access these notes while remote often. My prior solution had been SCP & SFTP, which work fine, but is not maintainable and unreliable, at least over such sustained consistent use.
+
+Git has always been an obvious resolution to this issue that resolves conflicts with networking, port forwarding, firewalls, ssh keys, and hardware troubles but has the biggest downside: third-party servers. Personally, I hate using other people's hardware and much prefer relying on my own configurations and softwares in any and all situations. Regardless of my preference, hosting things like personal information or sensitive data on Github is not optimal for OPSEC. Additionally, when self-hosting, data breaches and leaks do not affect you. Finally, not only does this store the information on your hardware but the server is installed and configured 100% by the administrator; you. I find this to be the ideal case!
+
+The notes should be organized really only off of their folder / subfolder within the over-arching folder. As of right now, i do not want to be able to search through the notes. The notes should be timestamped with the UTC time; maybe once for creation and additionally for editing, but we'll see how the configuration of the db goes. No other metadata at the moment. I would like to be able to export and import notes, but we'll configure this later.
+
+Luckily for this application's design, my notes are comprised entirely and solely of .md files. Their contents are 99% of their worth. The other 1% is their title and path.
+
+I want this application to act similar to a git repository. We will work out the details, but essentially, this application should take a given folder, create the queries for the MySQL server to load the files into the database { as long as it has the proper permissions } and then execute said queries. This could either be done with an SQL script or with the MySQL python connector API. An area that will surely introduce complication is versioning, which I don't think should be dealt with at this time.
+
+In this system, I am picturing a push / pull system with, at least initially, more of a brute force methodology and git's agile versioning. When pushing, the whole database is replaced, and when pulling, the whole database is pulled to replace the local one. If I edited file A and pushed on the mac, and then edited file B and pushed on the windows pc, the database would be overwritten by the mac's push, then the database would be overwritten again for the windows' pc. This is clearly obtusely inefficient, but refinement will come later. 
+
+Again, initially, not .md files should be ignored. The application should just handle whatever folder you give it { again, initially }. Also, the machine that is pushing and pulling should be dynamic and reversible. Both, and more, devices will be doing pushing and pulling. 
+
+The initial vault import and the vault restoration { downloading / pulling from MySQL } are the most important features. Next, would be detecting changes and updating accordingly. Again, initially, this could be something as simple as checking file lengths and updating ones that were detected to be different lengths.
+
+I have previously found out the maximum character count in this vault was under 65k, so I chose TEXT as the datatype for this database. I would prefer exactly what was given to the database to be what is returned. If MySQL drops the connection, I suppose we'd rollback the insertions / deletes that were partially completed and revert the db to the previous state and notify the user of the dropped connection. Again, this is detailed design to include later.
+
+Files will likely be identified with name + path to prevent the possibility of duplicate values. Moving a folder should be an update probably with a correction the record's path value, as the filename won't change. For replacement, I meant truncate current data and replace with local vault of 'pusher'. Maybe we have the last 5 databases go to a separate backup as well. For user feedback, i'd like a simple progress bar and any dropped or not entirely copied files, + the size of the database.
+
+In addition to the path, filename, content, creation / last edit utc's, i'd like the hash & file size. But relax. The cli will be configured with a configuration file for authentication and credentials. Ideally, I'd like to be able to use some niche name to run this, like how git is used, but since we're restricted to Python, this may be impossible for the moment.
