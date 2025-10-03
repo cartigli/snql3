@@ -30,6 +30,7 @@ def layout_guts(guts):
 	note_name = []
 	note_lo = []
 	note_guts = []
+	hashes = []
 
 	for record in guts:
 		note_name.append(record[1])
@@ -41,14 +42,17 @@ def layout_guts(guts):
 
 		note_guts.append(record[3])
 
-	return note_name, note_lo, note_guts
+		hashes.append(record[4])
+
+	return note_name, note_lo, note_guts, hashes
 
 
 def contain(note_name, note_lo, note_guts):
 	notes = pd.DataFrame({
 			'name': note_name,
 			'path': note_lo,
-			'contents': note_guts
+			'contents': note_guts,
+			'hashes': hashes
 		})
 
 	return notes
@@ -66,13 +70,13 @@ def write_to_disk(notes):
 			f.write(contents)
 
 
-def initialize_connection(USER, PSWD, NAME, ADDR):
+def initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR):
 	try:
 		conn = mysql.connector.connect(
-			host=ADDR,
-			user=USER,
-			password=PSWD,
-			database=NAME
+			host=DB_ADDR,
+			user=DB_USER,
+			password=DB_PSWD,
+			database=DB_NAME
 		)
 
 		return conn
@@ -84,20 +88,17 @@ def initialize_connection(USER, PSWD, NAME, ADDR):
 
 
 if __name__ == "__main__":
-	conn = initialize_connection(USER, PSWD, NAME, ADDR)
+	conn = initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR)
 
 	if conn:
-
 		try:
-			table = survey_db(conn, NAME)
-			todos_detable = survey_t(conn, table)
-			guts = layout_guts(todos_detable)
-			glory = contain(*guts)
+			table = survey_db(conn, DB_NAME)
+			contents_detable = survey_t(conn, table)
+			note_name, note_lo, note_guts, hashes = layout_guts(contents_detable)
+			glory = contain(note_name, note_lo, note_guts)
 			write_to_disk(glory)
-
 		finally:
 			conn.close()
 			print(f"Got the files to the local_machine, boss!")
-
 	else:
 		print(f"Something went wrong, boss. Check the connection & config, please.")

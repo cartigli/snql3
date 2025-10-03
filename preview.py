@@ -3,13 +3,13 @@ import pandas as pd
 import mysql.connector 
 from config import *
 
-def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
+def initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR):
 	try:
 		conn = mysql.connector.connect(
-			host=DATABASE_ADDR,
+			host=DB_ADDR,
 			user=DB_USER,
-			password=PASS_PHRASE,
-			database=DATABASE_NAME
+			password=DB_PSWD,
+			database=DB_NAME
 		)
 
 		return conn
@@ -31,7 +31,7 @@ def initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR):
 def search_tables(conn):
 	cursor = conn.cursor()
 
-	query = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{DATABASE_NAME}' ORDER BY table_name DESC;"
+	query = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{DB_NAME}' ORDER BY table_name DESC;"
 	cursor.execute(query)
 	tables = cursor.fetchall()
 
@@ -40,19 +40,12 @@ def search_tables(conn):
 	return table
 
 if __name__ == "__main__":
-	conn = initialize_connection(DB_USER, PASS_PHRASE, DATABASE_NAME, DATABASE_ADDR)
+	conn = initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR)
 
 	table = search_tables(conn)
 	#print(tables) # list of tuples
 	print(table) # prints only youngest table based off the timestamps relative to other tables
 	conn.close()
-
-
-
-
-
-
-
 
 # Now that we can reliably find the largest title of any 
 # table in the given db, and it is returned as a string, 
