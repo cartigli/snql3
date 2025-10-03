@@ -112,9 +112,11 @@ def hash_duty(hashes_local, los_local, hashes, note_relos):
 	print(f"Checking hashes for edits since last upload:")
 
 	for key in remote_hp:
-		if local_hp[key] != remote_hp[key]:
-			print(f"Hash discrepancy: {local_hp[key]}:{remote_hp[key]}\n{key} has been edited.")
-			edited.append(key)
+		if key not in created:
+			if key not in deleted:
+				if local_hp[key] != remote_hp[key]:
+					print(f"Hash discrepancy: {local_hp[key]}:{remote_hp[key]}\n{key} has been edited.")
+					edited.append(key)
 	
 	return deleted, created, edited
 

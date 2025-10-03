@@ -95,7 +95,7 @@ def table_support(conn):
 
 	title = f"de"
 	t_name = (f"{title}_{time}")
-	q = f"CREATE TABLE IF NOT EXISTS {t_name} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4 NOT NULL, hash VARCHAR(1024) NOT NULL, PRIMARY KEY (note_no));"
+	q = f"CREATE TABLE IF NOT EXISTS {t_name} (note_no INT NOT NULL AUTO_INCREMENT, note_tl VARCHAR(75) NOT NULL, note_lo VARCHAR(255) NOT NULL, note TEXT CHARACTER SET utf8mb4 NOT NULL, hash VARCHAR(64) NOT NULL, PRIMARY KEY (note_no));"
 	cursor.execute(q)
 
 	return t_name
