@@ -1,5 +1,5 @@
 import os
-import time
+#import time
 import hashlib
 import datetime
 import pandas as pd
@@ -32,8 +32,8 @@ def collector(LOCAL_DIR):
 					lo_togo.append(rel_fpath)
 					name_togo.append(filename)
 					with open(fll_fpath, 'rb') as g:
-					    while chunk := g.read(8192):
-					        hasher.update(chunk)
+						while chunk := g.read(8192):
+							hasher.update(chunk)
 					hex = hasher.hexdigest()
 					hashes.append(hex)
 
