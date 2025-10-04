@@ -52,7 +52,6 @@ if __name__=="__main__":
 		except ValueError:
 			try:
 				dt = datetime.datetime.strptime(clean, '%Y%m%d%H%M%S')
-
 			except ValueError as e:
 				print(f"Could not parse dt_obj {raw}; {e}")
 

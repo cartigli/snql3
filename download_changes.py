@@ -6,6 +6,7 @@ import mysql.connector
 from config import *
 
 
+
 def survey_db(conn, DB_NAME):
 	cursor = conn.cursor()
 
@@ -18,6 +19,7 @@ def survey_db(conn, DB_NAME):
 	return table
 
 
+
 def survey_t(conn, table):
 	cursor = conn.cursor()
 
@@ -27,7 +29,8 @@ def survey_t(conn, table):
 
 	return guts
 
- 
+
+
 def layout_guts(guts):
 	note_names = []
 	note_relos = []
@@ -51,9 +54,10 @@ def layout_guts(guts):
 	return hashes, note_names, note_relos, note_los, note_guts
 
 
+
 def local_hash(LOCAL_DIR):
 	names_local = []
-	los_local = []
+	relos_local = []
 	hashes_local = []
 
 	for root, dirs, files in os.walk(LOCAL_DIR):
@@ -66,9 +70,7 @@ def local_hash(LOCAL_DIR):
 
 				hasher = hashlib.sha256()
 				if any(term in fll_fpath for term in ftype_ign):
-					#print(f"{filename}\'s spoofed.")
 					continue
-
 				else:
 					with open(fll_fpath, 'rb') as g:
 						while chunk := g.read(8192):
@@ -78,7 +80,7 @@ def local_hash(LOCAL_DIR):
 					hashes_local.append(h_sh)
 
 					names_local.append(filename)
-					los_local.append(rel_fpath)
+					relos_local.append(rel_fpath)
 
 			except Exception as e:
 				print(f"ERR: {e} ON {filename}.")
@@ -87,15 +89,16 @@ def local_hash(LOCAL_DIR):
 			except Exception as e:
 				print(f"Hash generation failed for {filename}: {e}")
 
-	return hashes_local, names_local, los_local
+	return hashes_local, names_local, relos_local
 
 
-def hash_duty(hashes_local, los_local, hashes, note_relos):
+
+def hash_duty(hashes_local, relos_local, hashes, note_relos):
 	created = []
 	deleted = []
 	edited = []
 
-	local_hp = {lo_local: hashe_local for lo_local, hashe_local in zip(los_local, hashes_local)}
+	local_hp = {lo_local: hashe_local for lo_local, hashe_local in zip(relos_local, hashes_local)}
 	remote_hp = {note_lo: hashh for note_lo, hashh in zip(note_relos, hashes)}
 
 	print(f"Checking files added/removed from server since last upload:")
@@ -118,7 +121,10 @@ def hash_duty(hashes_local, los_local, hashes, note_relos):
 					print(f"Hash discrepancy: {local_hp[key]}:{remote_hp[key]}\n{key} has been edited.")
 					edited.append(key)
 	
+	print(created)
+	
 	return deleted, created, edited
+
 
 
 def initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR):
@@ -138,6 +144,7 @@ def initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR):
 		return None
 
 
+
 if __name__ == "__main__":
 	conn = initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR)
 
@@ -146,8 +153,8 @@ if __name__ == "__main__":
 			table = survey_db(conn, DB_NAME)
 			contents_detable = survey_t(conn, table)
 			hashes, note_names, note_relos, note_los, note_guts = layout_guts(contents_detable)
-			hashes_local, names_local, los_local = local_hash(LOCAL_DIR)
-			alterations = hash_duty(hashes_local, los_local, hashes, note_relos)
+			hashes_local, names_local, relos_local = local_hash(LOCAL_DIR)
+			alterations = hash_duty(hashes_local, relos_local, hashes, note_relos)
 		finally:
 			conn.close()
 

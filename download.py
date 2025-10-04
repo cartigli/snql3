@@ -1,19 +1,22 @@
 import os
 import pandas as pd
 import mysql.connector
-from config import *
+f
+rom config import *
 
 
-def survey_db(conn, NAME):
+
+def survey_db(conn, DB_NAME):
 	cursor = conn.cursor()
 
-	q = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{NAME}' ORDER BY table_name DESC;"
+	q = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{DB_NAME}' ORDER BY table_name DESC;"
 	cursor.execute(q)
 
 	tables = cursor.fetchall()
 	table = tables[0][0]
 
 	return table
+
 
 
 def survey_t(conn, table):
@@ -26,6 +29,7 @@ def survey_t(conn, table):
 	return guts
 
  
+
 def layout_guts(guts):
 	note_name = []
 	note_lo = []
@@ -47,15 +51,16 @@ def layout_guts(guts):
 	return note_name, note_lo, note_guts, hashes
 
 
+
 def contain(note_name, note_lo, note_guts):
 	notes = pd.DataFrame({
 			'name': note_name,
 			'path': note_lo,
-			'contents': note_guts,
-			'hashes': hashes
+			'contents': note_guts
 		})
 
 	return notes
+
 
 
 def write_to_disk(notes):
@@ -68,6 +73,7 @@ def write_to_disk(notes):
 
 		with open(path, 'w', encoding='utf-8') as f:
 			f.write(contents)
+
 
 
 def initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR):
@@ -85,6 +91,7 @@ def initialize_connection(DB_USER, DB_PSWD, DB_NAME, DB_ADDR):
 		print(f"ERR: {e}; CHECK CONFIG!")
 
 		return None
+
 
 
 if __name__ == "__main__":
